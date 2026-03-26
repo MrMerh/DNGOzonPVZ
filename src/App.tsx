@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { SettingsProvider } from './context/SettingsContext';
 import AppShell from './components/layout/AppShell';
 import Dashboard from './pages/Dashboard';
@@ -9,7 +9,7 @@ import Settings from './pages/Settings';
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <HashRouter>
       <SettingsProvider>
         <Routes>
           <Route element={<AppShell />}>
@@ -22,6 +22,6 @@ export default function App() {
           </Route>
         </Routes>
       </SettingsProvider>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
