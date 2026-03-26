@@ -5,6 +5,7 @@ import type { AppSettings } from '../types';
 interface SettingsContextValue {
   settings: AppSettings;
   loading: boolean;
+  firestoreError: string | null;
   updateSettings: (partial: Partial<AppSettings>) => Promise<void>;
 }
 
