@@ -136,3 +136,69 @@ select.input, select.input-sm { cursor: pointer; }
 /* ── Loader / empty ──────────────────────────────────── */
 .loader { color: var(--text2); padding: 40px; text-align: center; }
 .empty-text { color: var(--text2); font-size: 13px; }
+
+/* ── Sidebar sections ────────────────────────────────── */
+.sidebar-section { padding: 14px 12px 4px; font-size: 10px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: .08em; }
+.sidebar-divider { height: 1px; background: var(--border); margin: 8px 12px; }
+
+/* ── Tabs ────────────────────────────────────────────── */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); }
+.tab-btn { background: none; border: none; padding: 9px 16px; font-size: 13.5px; color: var(--text2); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color .15s, border-color .15s; }
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+/* ── Employees ───────────────────────────────────────── */
+.employees-list { display: flex; flex-direction: column; gap: 12px; }
+.emp-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+.emp-card.inactive { opacity: .55; }
+.emp-card-header { display: flex; align-items: flex-start; justify-content: space-between; padding: 14px 16px; }
+.emp-info { display: flex; align-items: flex-start; gap: 12px; }
+.emp-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--accent); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 15px; flex-shrink: 0; }
+.emp-name { font-weight: 600; font-size: 15px; }
+.emp-meta { font-size: 12px; color: var(--text2); margin-top: 2px; display: flex; gap: 4px; flex-wrap: wrap; }
+.emp-actions { display: flex; gap: 4px; }
+.emp-edit-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.emp-card-body { padding: 10px 16px 14px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+.emp-code-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; }
+.access-code { font-family: monospace; font-size: 18px; font-weight: 700; color: var(--accent); background: rgba(59,130,246,.1); padding: 2px 10px; border-radius: 6px; letter-spacing: .12em; }
+.access-code.used { color: var(--text2); background: var(--surface); text-decoration: line-through; }
+.code-status { font-size: 11px; color: var(--text2); }
+.pvz-access-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; }
+.pvz-toggles { display: flex; gap: 6px; flex-wrap: wrap; }
+.pvz-toggle-btn { padding: 3px 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--surface); color: var(--text2); font-size: 12px; cursor: pointer; transition: all .15s; }
+.pvz-toggle-btn.on { border-color: var(--accent); background: rgba(59,130,246,.15); color: var(--accent); }
+.expand-btn { background: none; border: none; color: var(--text2); font-size: 12px; cursor: pointer; align-self: flex-start; padding: 0; }
+
+/* ── Schedule grid ───────────────────────────────────── */
+.schedule-wrap { overflow-x: auto; border-radius: var(--radius); border: 1px solid var(--border); }
+.schedule-table { border-collapse: collapse; width: max-content; min-width: 100%; font-size: 13px; }
+.schedule-table th, .schedule-table td { border: 1px solid var(--border); }
+.schedule-table thead { background: var(--surface); }
+.schedule-table th { padding: 6px 8px; font-weight: 600; color: var(--text2); font-size: 11px; text-transform: uppercase; white-space: nowrap; }
+.emp-col { min-width: 110px; position: sticky; left: 0; background: var(--bg2); z-index: 1; }
+.schedule-table thead .emp-col { background: var(--surface); }
+.date-head { display: flex; flex-direction: column; align-items: center; gap: 1px; }
+.date-day { font-size: 10px; color: var(--text2); }
+.date-num { font-size: 12px; font-weight: 600; }
+.today-col { background: rgba(59,130,246,.06) !important; }
+.sched-emp-name { font-weight: 600; font-size: 13px; }
+.sched-emp-sub { font-size: 11px; color: var(--text2); }
+.slot-cell { width: 74px; min-width: 74px; height: 44px; text-align: center; padding: 4px; }
+.slot-filled { display: flex; align-items: center; justify-content: space-between; gap: 2px; background: rgba(59,130,246,.12); border-radius: 5px; padding: 3px 6px; height: 100%; }
+.slot-pvz { font-size: 11px; color: var(--accent); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 52px; }
+.slot-del { background: none; border: none; cursor: pointer; color: var(--text2); padding: 1px; display: flex; border-radius: 3px; }
+.slot-del:hover { color: var(--red); }
+.slot-add { width: 100%; height: 100%; background: none; border: 1px dashed var(--border); border-radius: 5px; cursor: pointer; color: var(--text2); display: flex; align-items: center; justify-content: center; transition: all .15s; }
+.slot-add:hover { border-color: var(--accent); color: var(--accent); background: rgba(59,130,246,.06); }
+
+/* ── Shifts / Filters ────────────────────────────────── */
+.filters-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.checkboxes-row { display: flex; gap: 20px; }
+.checkbox-label { display: flex; align-items: center; gap: 6px; font-size: 13.5px; cursor: pointer; }
+.checkbox-label input { accent-color: var(--accent); width: 15px; height: 15px; }
+
+/* ── PVZ add form ────────────────────────────────────── */
+.pvz-add-form { display: flex; gap: 8px; align-items: center; padding: 10px 0 12px; flex-wrap: wrap; }
+

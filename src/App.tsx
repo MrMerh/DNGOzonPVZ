@@ -6,6 +6,9 @@ import Income from './pages/Income';
 import Expenses from './pages/Expenses';
 import Analytics from './pages/Analytics';
 import Settings from './pages/Settings';
+import Employees from './pages/Employees';
+import Schedule from './pages/Schedule';
+import Shifts from './pages/Shifts';
 
 export default function App() {
   return (
@@ -18,6 +21,9 @@ export default function App() {
             <Route path="/income" element={<Income />} />
             <Route path="/expenses" element={<Expenses />} />
             <Route path="/analytics" element={<Analytics />} />
+            <Route path="/employees" element={<Employees />} />
+            <Route path="/schedule" element={<Schedule />} />
+            <Route path="/shifts" element={<Shifts />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
         </Routes>

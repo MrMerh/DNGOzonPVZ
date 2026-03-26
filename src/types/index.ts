@@ -1,3 +1,5 @@
+// ─── Financial ───────────────────────────────────────────────────────────────
+
 export type ExpenseCategory =
   | 'реклама'
   | 'аренда'
@@ -50,4 +52,70 @@ export interface RecentTransaction {
   date: Date;
   amount: number;
   label: string;
+}
+
+// ─── PVZ Points ───────────────────────────────────────────────────────────────
+
+export interface PVZPoint {
+  id: string;
+  name: string;
+  address: string;
+  isActive: boolean;
+  createdAt: Date;
+}
+
+// ─── Employees ────────────────────────────────────────────────────────────────
+
+export interface Employee {
+  id: string;
+  name: string;
+  tgUsername: string;
+  primaryPvzId: string;
+  salary: number;
+  accessCode: string;
+  codeUsed: boolean;
+  isActive: boolean;
+  pvzAccess: string[]; // array of PVZ point IDs
+  createdAt: Date;
+}
+
+// ─── Schedule ─────────────────────────────────────────────────────────────────
+
+export interface ScheduleSlot {
+  id: string;
+  employeeId: string;
+  pvzId: string;
+  date: Date;
+  confirmed: boolean;
+  requestedByEmp: boolean;
+  createdAt: Date;
+}
+
+// ─── Shifts ───────────────────────────────────────────────────────────────────
+
+export interface Shift {
+  id: string;
+  employeeId: string;
+  pvzId: string;
+  date: Date;
+  parcelsIn: number;
+  parcelsOut: number;
+  returns: number;
+  incident: boolean;
+  bonus: number;
+  bonusComment: string;
+  fine: number;
+  fineComment: string;
+  checklistCompleted: boolean;
+  notes: string;
+  createdAt: Date;
+}
+
+// ─── Announcements ────────────────────────────────────────────────────────────
+
+export interface Announcement {
+  id: string;
+  text: string;
+  isActive: boolean;
+  createdAt: Date;
 }
