@@ -2,18 +2,24 @@ import { useState } from 'react';
 import { Plus, RefreshCw, Pencil, Trash2, Check, X, ToggleLeft, ToggleRight } from 'lucide-react';
 import { useEmployees } from '../hooks/useEmployees';
 import { usePVZPoints } from '../hooks/usePVZPoints';
-import type { Employee } from '../types';
+import type { Employee, EmployeeRole } from '../types';
+import { ROLE_LABELS, ROLE_COLORS } from '../types';
 import Modal from '../components/ui/Modal';
-import { formatCurrency } from '../utils/formatCurrency';
 
 interface FormState {
   name: string;
   tgUsername: string;
   primaryPvzId: string;
-  salary: string;
+  role: EmployeeRole;
+  hourlyRate: string;
 }
 
-const EMPTY_FORM: FormState = { name: '', tgUsername: '', primaryPvzId: '', salary: '' };
+const EMPTY_FORM: FormState = {
+  name: '', tgUsername: '', primaryPvzId: '',
+  role: 'employee', hourlyRate: '',
+};
+
+const ROLES: EmployeeRole[] = ['owner', 'manager', 'employee'];
 
 export default function Employees() {
   const { employees, loading, addEmployee, updateEmployee, regenCode, deleteEmployee } = useEmployees();
@@ -23,10 +29,14 @@ export default function Employees() {
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [editId, setEditId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<FormState>(EMPTY_FORM);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   function toFormState(e: Employee): FormState {
-    return { name: e.name, tgUsername: e.tgUsername, primaryPvzId: e.primaryPvzId, salary: String(e.salary) };
+    return {
+      name: e.name, tgUsername: e.tgUsername,
+      primaryPvzId: e.primaryPvzId,
+      role: e.role ?? 'employee',
+      hourlyRate: String(e.hourlyRate ?? 0),
+    };
   }
 
   async function handleAdd(ev: React.FormEvent) {
@@ -35,7 +45,8 @@ export default function Employees() {
       name: form.name,
       tgUsername: form.tgUsername,
       primaryPvzId: form.primaryPvzId,
-      salary: parseFloat(form.salary) || 0,
+      role: form.role,
+      hourlyRate: parseFloat(form.hourlyRate) || 0,
       isActive: true,
       pvzAccess: form.primaryPvzId ? [form.primaryPvzId] : [],
     });
@@ -48,14 +59,17 @@ export default function Employees() {
       name: editForm.name,
       tgUsername: editForm.tgUsername,
       primaryPvzId: editForm.primaryPvzId,
-      salary: parseFloat(editForm.salary) || 0,
+      role: editForm.role,
+      hourlyRate: parseFloat(editForm.hourlyRate) || 0,
     });
     setEditId(null);
   }
 
   async function togglePvzAccess(emp: Employee, pvzId: string) {
     const has = emp.pvzAccess.includes(pvzId);
-    const next = has ? emp.pvzAccess.filter((id) => id !== pvzId) : [...emp.pvzAccess, pvzId];
+    const next = has
+      ? emp.pvzAccess.filter((id) => id !== pvzId)
+      : [...emp.pvzAccess, pvzId];
     await updateEmployee(emp.id, { pvzAccess: next });
   }
 
@@ -73,13 +87,21 @@ export default function Employees() {
       {loading ? <div className="loader">Загрузка...</div> : (
         <div className="employees-list">
           {employees.length === 0 && (
-            <div className="card"><p className="empty-text">Сотрудников пока нет. Добавьте первого.</p></div>
+            <div className="card">
+              <p className="empty-text">Сотрудников пока нет. Добавьте первого.</p>
+            </div>
           )}
+
           {employees.map((emp) => (
             <div key={emp.id} className={`emp-card${!emp.isActive ? ' inactive' : ''}`}>
               <div className="emp-card-header">
                 <div className="emp-info">
-                  <div className="emp-avatar">{emp.name.charAt(0).toUpperCase()}</div>
+                  <div
+                    className="emp-avatar"
+                    style={{ background: ROLE_COLORS[emp.role ?? 'employee'] }}
+                  >
+                    {emp.name.charAt(0).toUpperCase()}
+                  </div>
                   <div>
                     {editId === emp.id ? (
                       <div className="emp-edit-row">
@@ -87,8 +109,13 @@ export default function Employees() {
                           onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} />
                         <input className="input-sm" value={editForm.tgUsername} placeholder="@username"
                           onChange={(e) => setEditForm({ ...editForm, tgUsername: e.target.value })} />
-                        <input className="input-sm" type="number" value={editForm.salary} placeholder="Ставка"
-                          onChange={(e) => setEditForm({ ...editForm, salary: e.target.value })} />
+                        <select className="input-sm" value={editForm.role}
+                          onChange={(e) => setEditForm({ ...editForm, role: e.target.value as EmployeeRole })}>
+                          {ROLES.map((r) => <option key={r} value={r}>{ROLE_LABELS[r]}</option>)}
+                        </select>
+                        <input className="input-sm" type="number" value={editForm.hourlyRate}
+                          placeholder="₽/час"
+                          onChange={(e) => setEditForm({ ...editForm, hourlyRate: e.target.value })} />
                         <select className="input-sm" value={editForm.primaryPvzId}
                           onChange={(e) => setEditForm({ ...editForm, primaryPvzId: e.target.value })}>
                           <option value="">— ПВЗ —</option>
@@ -97,21 +124,40 @@ export default function Employees() {
                       </div>
                     ) : (
                       <>
-                        <div className="emp-name">{emp.name}</div>
+                        <div className="emp-name-row">
+                          <span className="emp-name">{emp.name}</span>
+                          <span
+                            className="role-badge"
+                            style={{
+                              background: `${ROLE_COLORS[emp.role ?? 'employee']}22`,
+                              color: ROLE_COLORS[emp.role ?? 'employee'],
+                              borderColor: `${ROLE_COLORS[emp.role ?? 'employee']}44`,
+                            }}
+                          >
+                            {ROLE_LABELS[emp.role ?? 'employee']}
+                          </span>
+                        </div>
                         <div className="emp-meta">
                           {emp.tgUsername && <span>@{emp.tgUsername}</span>}
                           {emp.primaryPvzId && <span>· {pvzName(emp.primaryPvzId)}</span>}
-                          <span>· {formatCurrency(emp.salary)}/мес</span>
+                          {emp.hourlyRate > 0 && (
+                            <span>· <strong style={{ color: 'var(--green)' }}>{emp.hourlyRate} ₽/час</strong></span>
+                          )}
                         </div>
                       </>
                     )}
                   </div>
                 </div>
+
                 <div className="emp-actions">
                   {editId === emp.id ? (
                     <>
-                      <button className="icon-btn green" onClick={() => handleSaveEdit(emp.id)}><Check size={15} /></button>
-                      <button className="icon-btn" onClick={() => setEditId(null)}><X size={15} /></button>
+                      <button className="icon-btn green" onClick={() => handleSaveEdit(emp.id)}>
+                        <Check size={15} />
+                      </button>
+                      <button className="icon-btn" onClick={() => setEditId(null)}>
+                        <X size={15} />
+                      </button>
                     </>
                   ) : (
                     <>
@@ -124,9 +170,13 @@ export default function Employees() {
                         title={emp.isActive ? 'Деактивировать' : 'Активировать'}
                         onClick={() => updateEmployee(emp.id, { isActive: !emp.isActive })}
                       >
-                        {emp.isActive ? <ToggleRight size={18} style={{ color: 'var(--green)' }} /> : <ToggleLeft size={18} />}
+                        {emp.isActive
+                          ? <ToggleRight size={18} style={{ color: 'var(--green)' }} />
+                          : <ToggleLeft size={18} />
+                        }
                       </button>
-                      <button className="icon-btn danger" title="Удалить" onClick={() => deleteEmployee(emp.id)}>
+                      <button className="icon-btn danger" title="Удалить"
+                        onClick={() => deleteEmployee(emp.id)}>
                         <Trash2 size={15} />
                       </button>
                     </>
@@ -134,13 +184,16 @@ export default function Employees() {
                 </div>
               </div>
 
-              {/* Code + PVZ access */}
               <div className="emp-card-body">
                 <div className="emp-code-row">
-                  <span className="field-label">Код доступа Mini App:</span>
-                  <code className={`access-code${emp.codeUsed ? ' used' : ''}`}>{emp.accessCode}</code>
-                  <span className="code-status">{emp.codeUsed ? '● Использован' : '○ Не использован'}</span>
-                  <button className="icon-btn" title="Перегенерировать код" onClick={() => regenCode(emp.id)}>
+                  <span className="field-label">Код Mini App:</span>
+                  <code className={`access-code${emp.codeUsed ? ' used' : ''}`}>
+                    {emp.accessCode}
+                  </code>
+                  <span className="code-status">
+                    {emp.codeUsed ? '● Использован' : '○ Не использован'}
+                  </span>
+                  <button className="icon-btn" title="Новый код" onClick={() => regenCode(emp.id)}>
                     <RefreshCw size={13} />
                   </button>
                 </div>
@@ -161,13 +214,6 @@ export default function Employees() {
                     </div>
                   </div>
                 )}
-
-                <button
-                  className="expand-btn"
-                  onClick={() => setExpandedId(expandedId === emp.id ? null : emp.id)}
-                >
-                  {expandedId === emp.id ? '▲ Скрыть' : '▼ Статистика'}
-                </button>
               </div>
             </div>
           ))}
@@ -177,7 +223,7 @@ export default function Employees() {
       {showAdd && (
         <Modal title="Новый сотрудник" onClose={() => { setShowAdd(false); setForm(EMPTY_FORM); }}>
           <form onSubmit={handleAdd} className="form-grid">
-            <label className="field-label">ФИО</label>
+            <label className="field-label">ФИО *</label>
             <input className="input" required placeholder="Иванов Иван Иванович"
               value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
 
@@ -185,16 +231,23 @@ export default function Employees() {
             <input className="input" placeholder="username (без @)"
               value={form.tgUsername} onChange={(e) => setForm({ ...form, tgUsername: e.target.value })} />
 
+            <label className="field-label">Роль</label>
+            <select className="input" value={form.role}
+              onChange={(e) => setForm({ ...form, role: e.target.value as EmployeeRole })}>
+              {ROLES.map((r) => <option key={r} value={r}>{ROLE_LABELS[r]}</option>)}
+            </select>
+
+            <label className="field-label">Почасовая ставка (₽/час)</label>
+            <input className="input" type="number" min="0" step="10" placeholder="250"
+              value={form.hourlyRate}
+              onChange={(e) => setForm({ ...form, hourlyRate: e.target.value })} />
+
             <label className="field-label">Основная ТТ</label>
             <select className="input" value={form.primaryPvzId}
               onChange={(e) => setForm({ ...form, primaryPvzId: e.target.value })}>
               <option value="">— Выберите точку —</option>
               {activePoints.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
-
-            <label className="field-label">Ставка (₽/мес)</label>
-            <input className="input" type="number" min="0" step="500" placeholder="30000"
-              value={form.salary} onChange={(e) => setForm({ ...form, salary: e.target.value })} />
 
             <button type="submit" className="btn btn-primary" style={{ marginTop: 8 }}>
               Создать сотрудника

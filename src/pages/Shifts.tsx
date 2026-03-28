@@ -14,7 +14,7 @@ type ShiftForm = Omit<Shift, 'id' | 'createdAt' | 'date'> & { date: string };
 
 const EMPTY: ShiftForm = {
   employeeId: '', pvzId: '', date: format(new Date(), 'yyyy-MM-dd'),
-  parcelsIn: 0, parcelsOut: 0, returns: 0,
+  hours: 0, parcelsIn: 0, parcelsOut: 0, returns: 0,
   incident: false, bonus: 0, bonusComment: '', fine: 0, fineComment: '',
   checklistCompleted: false, notes: '',
 };
@@ -80,7 +80,8 @@ export default function Shifts() {
                 <th>Дата</th>
                 <th>Сотрудник</th>
                 <th>ТТ</th>
-                <th>Выдано</th>
+                <th>Часы</th>
+              <th>Выдано</th>
                 <th>Принято</th>
                 <th>Возвраты</th>
                 <th>Бонус/Штраф</th>
@@ -97,6 +98,7 @@ export default function Shifts() {
                   <td>{formatDate(s.date)}</td>
                   <td>{empName(s.employeeId)}</td>
                   <td>{pvzName(s.pvzId)}</td>
+                  <td>{s.hours > 0 ? `${s.hours}ч` : '—'}</td>
                   <td className="amount-cell accent">{s.parcelsOut}</td>
                   <td>{s.parcelsIn}</td>
                   <td>{s.returns > 0 ? <span className="tag red">{s.returns}</span> : '—'}</td>
@@ -136,6 +138,11 @@ export default function Shifts() {
 
             <label className="field-label">Дата *</label>
             <input className="input" type="date" required value={form.date} onChange={(e) => f('date', e.target.value)} />
+
+            <label className="field-label">Часов отработано</label>
+            <input className="input" type="number" min="0" max="24" step="0.5" placeholder="8"
+              value={form.hours || ''}
+              onChange={(e) => f('hours', parseFloat(e.target.value) || 0)} />
 
             <div className="form-row-3">
               <div>

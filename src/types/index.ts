@@ -66,16 +66,31 @@ export interface PVZPoint {
 
 // ─── Employees ────────────────────────────────────────────────────────────────
 
+export type EmployeeRole = 'owner' | 'manager' | 'employee';
+
+export const ROLE_LABELS: Record<EmployeeRole, string> = {
+  owner: 'Владелец',
+  manager: 'Менеджер',
+  employee: 'Сотрудник',
+};
+
+export const ROLE_COLORS: Record<EmployeeRole, string> = {
+  owner: '#f59e0b',
+  manager: '#3b82f6',
+  employee: '#6b7280',
+};
+
 export interface Employee {
   id: string;
   name: string;
   tgUsername: string;
   primaryPvzId: string;
-  salary: number;
+  role: EmployeeRole;
+  hourlyRate: number;   // ₽/час
   accessCode: string;
   codeUsed: boolean;
   isActive: boolean;
-  pvzAccess: string[]; // array of PVZ point IDs
+  pvzAccess: string[];
   createdAt: Date;
 }
 
@@ -98,6 +113,7 @@ export interface Shift {
   employeeId: string;
   pvzId: string;
   date: Date;
+  hours: number;        // продолжительность смены в часах
   parcelsIn: number;
   parcelsOut: number;
   returns: number;

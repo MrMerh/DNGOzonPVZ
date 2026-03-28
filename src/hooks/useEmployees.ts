@@ -4,7 +4,7 @@ import {
   doc, query, orderBy, Timestamp,
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import type { Employee } from '../types';
+import type { Employee, EmployeeRole } from '../types';
 import { toDate } from '../utils/dateHelpers';
 
 const COL = collection(db, 'employees');
@@ -20,16 +20,24 @@ export function useEmployees() {
   useEffect(() => {
     const q = query(COL, orderBy('createdAt', 'asc'));
     return onSnapshot(q, (snap) => {
-      setEmployees(snap.docs.map((d) => ({
-        ...(d.data() as Omit<Employee, 'id' | 'createdAt'>),
-        id: d.id,
-        createdAt: toDate(d.data().createdAt as Timestamp),
-      })));
+      setEmployees(snap.docs.map((d) => {
+        const data = d.data();
+        return {
+          ...(data as Omit<Employee, 'id' | 'createdAt'>),
+          id: d.id,
+          // backward-compat: old docs had `salary`, new have `hourlyRate`
+          hourlyRate: data.hourlyRate ?? data.salary ?? 0,
+          role: (data.role as EmployeeRole) ?? 'employee',
+          createdAt: toDate(data.createdAt as Timestamp),
+        };
+      }));
       setLoading(false);
     });
   }, []);
 
-  async function addEmployee(data: Omit<Employee, 'id' | 'createdAt' | 'accessCode' | 'codeUsed'>) {
+  async function addEmployee(
+    data: Omit<Employee, 'id' | 'createdAt' | 'accessCode' | 'codeUsed'>,
+  ) {
     await addDoc(COL, {
       ...data,
       accessCode: generateCode(),
@@ -38,12 +46,18 @@ export function useEmployees() {
     });
   }
 
-  async function updateEmployee(id: string, data: Partial<Omit<Employee, 'id' | 'createdAt'>>) {
+  async function updateEmployee(
+    id: string,
+    data: Partial<Omit<Employee, 'id' | 'createdAt'>>,
+  ) {
     await updateDoc(doc(db, 'employees', id), data as Record<string, unknown>);
   }
 
   async function regenCode(id: string) {
-    await updateDoc(doc(db, 'employees', id), { accessCode: generateCode(), codeUsed: false });
+    await updateDoc(doc(db, 'employees', id), {
+      accessCode: generateCode(),
+      codeUsed: false,
+    });
   }
 
   async function deleteEmployee(id: string) {
@@ -52,5 +66,13 @@ export function useEmployees() {
 
   const activeEmployees = employees.filter((e) => e.isActive);
 
-  return { employees, activeEmployees, loading, addEmployee, updateEmployee, regenCode, deleteEmployee };
+  return {
+    employees,
+    activeEmployees,
+    loading,
+    addEmployee,
+    updateEmployee,
+    regenCode,
+    deleteEmployee,
+  };
 }
