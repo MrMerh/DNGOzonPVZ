@@ -183,9 +183,8 @@ select.input, select.input-sm { cursor: pointer; }
 .today-col { background: rgba(59,130,246,.06) !important; }
 .sched-emp-name { font-weight: 600; font-size: 13px; }
 .sched-emp-sub { font-size: 11px; color: var(--text2); }
-.slot-cell { width: 74px; min-width: 74px; height: 44px; text-align: center; padding: 4px; }
+.slot-cell { width: 74px; min-width: 74px; height: 54px; text-align: center; padding: 4px; }
 .slot-filled { display: flex; align-items: center; justify-content: space-between; gap: 2px; background: rgba(59,130,246,.12); border-radius: 5px; padding: 3px 6px; height: 100%; }
-.slot-pvz { font-size: 11px; color: var(--accent); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 52px; }
 .slot-del { background: none; border: none; cursor: pointer; color: var(--text2); padding: 1px; display: flex; border-radius: 3px; }
 .slot-del:hover { color: var(--red); }
 .slot-add { width: 100%; height: 100%; background: none; border: 1px dashed var(--border); border-radius: 5px; cursor: pointer; color: var(--text2); display: flex; align-items: center; justify-content: center; transition: all .15s; }
@@ -208,6 +207,42 @@ select.input, select.input-sm { cursor: pointer; }
 .dp-weekday { font-size: 9px; text-transform: uppercase; opacity: .7; }
 .dp-num { font-size: 13px; font-weight: 600; }
 .dp-x { position: absolute; top: 2px; right: 2px; }
+
+/* Slot time display */
+.slot-info { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; overflow: hidden; }
+.slot-time { font-size: 9px; color: var(--text2); white-space: nowrap; }
+.slot-pvz { font-size: 10px; color: var(--accent); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 52px; }
+
+/* Check-in dot */
+.checkin-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); display: inline-block; margin-left: 4px; vertical-align: middle; flex-shrink: 0; }
+
+/* Time range row in modal */
+.time-range-row { display: flex; align-items: center; gap: 8px; }
+.time-range-row .input { flex: 1; }
+
+/* Scan panel */
+.scan-panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; }
+.scan-panel-inner { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.scan-header { display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; }
+.scan-hint { font-weight: 400; color: var(--text2); font-size: 12px; }
+.scan-form { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.scan-input { flex: 1; min-width: 180px; font-family: monospace; letter-spacing: 1px; }
+.scan-result { padding: 8px 12px; border-radius: 6px; font-size: 13.5px; font-weight: 500; }
+.scan-result.ok { background: rgba(34,197,94,.12); color: var(--green); border: 1px solid rgba(34,197,94,.25); }
+.scan-result.err { background: rgba(239,68,68,.10); color: var(--red); border: 1px solid rgba(239,68,68,.25); }
+.scan-log { display: flex; flex-direction: column; gap: 6px; }
+.scan-log-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.scan-log-item { display: flex; align-items: center; gap: 6px; background: var(--bg2); border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; font-size: 12.5px; }
+.scan-time { color: var(--text2); font-size: 11px; font-family: monospace; }
+
+/* Barcode in employee card */
+.barcode-row { padding-top: 6px; }
+.barcode-toggle-btn { display: flex; align-items: center; gap: 5px; background: none; border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; font-size: 12px; color: var(--text2); cursor: pointer; transition: all .15s; }
+.barcode-toggle-btn:hover { border-color: var(--accent); color: var(--text1); }
+.barcode-card { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-top: 8px; }
+.barcode-name { font-size: 12px; font-weight: 600; color: var(--text2); }
+.barcode-svg { max-width: 220px; }
+.barcode-id { font-family: monospace; font-size: 10px; color: var(--text2); letter-spacing: .5px; word-break: break-all; }
 
 /* ── Shifts / Filters ────────────────────────────────── */
 .filters-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }

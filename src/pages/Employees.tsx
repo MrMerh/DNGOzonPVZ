@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Plus, RefreshCw, Pencil, Trash2, Check, X, ToggleLeft, ToggleRight } from 'lucide-react';
+import { Plus, RefreshCw, Pencil, Trash2, Check, X, ToggleLeft, ToggleRight, ChevronDown, ChevronUp } from 'lucide-react';
 import { useEmployees } from '../hooks/useEmployees';
 import { usePVZPoints } from '../hooks/usePVZPoints';
 import type { Employee, EmployeeRole } from '../types';
 import { ROLE_LABELS, ROLE_COLORS } from '../types';
 import Modal from '../components/ui/Modal';
+import Barcode from '../components/ui/Barcode';
 
 interface FormState {
   name: string;
@@ -29,6 +30,7 @@ export default function Employees() {
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [editId, setEditId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState<FormState>(EMPTY_FORM);
+  const [showBarcodeFor, setShowBarcodeFor] = useState<string | null>(null);
 
   function toFormState(e: Employee): FormState {
     return {
@@ -214,6 +216,23 @@ export default function Employees() {
                     </div>
                   </div>
                 )}
+
+                <div className="barcode-row">
+                  <button
+                    className="barcode-toggle-btn"
+                    onClick={() => setShowBarcodeFor(showBarcodeFor === emp.id ? null : emp.id)}
+                  >
+                    <span>Штрихкод</span>
+                    {showBarcodeFor === emp.id ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+                  </button>
+                  {showBarcodeFor === emp.id && (
+                    <div className="barcode-card">
+                      <div className="barcode-name">{emp.name}</div>
+                      <Barcode value={emp.id} height={56} width={1.4} />
+                      <div className="barcode-id">{emp.id}</div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           ))}

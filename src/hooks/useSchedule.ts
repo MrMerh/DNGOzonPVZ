@@ -26,12 +26,17 @@ export function useSchedule(month: Date) {
     );
     return onSnapshot(q, (snap) => {
       setSlots(
-        snap.docs.map((d) => ({
-          ...(d.data() as Omit<ScheduleSlot, 'id' | 'date' | 'createdAt'>),
-          id: d.id,
-          date: toDate(d.data().date as Timestamp),
-          createdAt: toDate(d.data().createdAt as Timestamp),
-        })),
+        snap.docs.map((d) => {
+          const data = d.data();
+          return {
+            ...(data as Omit<ScheduleSlot, 'id' | 'date' | 'createdAt'>),
+            id: d.id,
+            date: toDate(data.date as Timestamp),
+            timeStart: data.timeStart ?? '09:00',
+            timeEnd: data.timeEnd ?? '21:00',
+            createdAt: toDate(data.createdAt as Timestamp),
+          };
+        }),
       );
       setLoading(false);
     });

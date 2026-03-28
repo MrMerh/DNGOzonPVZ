@@ -101,8 +101,21 @@ export interface ScheduleSlot {
   employeeId: string;
   pvzId: string;
   date: Date;
+  timeStart: string;   // "09:00"
+  timeEnd: string;     // "21:00"
   confirmed: boolean;
   requestedByEmp: boolean;
+  createdAt: Date;
+}
+
+// ─── Attendance ───────────────────────────────────────────────────────────────
+
+export interface Attendance {
+  id: string;
+  employeeId: string;
+  pvzId: string;
+  date: Date;           // calendar date (start of day)
+  checkedInAt: Date;    // exact timestamp of scan
   createdAt: Date;
 }
 
