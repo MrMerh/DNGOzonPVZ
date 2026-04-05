@@ -3,6 +3,7 @@ import {
   LayoutDashboard, TrendingUp, TrendingDown,
   BarChart2, Settings, Package,
   Users, CalendarDays, ClipboardList,
+  KeyRound, CheckSquare, MessageSquare,
 } from 'lucide-react';
 
 const NAV = [
@@ -15,6 +16,10 @@ const NAV = [
   { to: '/employees', icon: Users, label: 'Сотрудники' },
   { to: '/schedule', icon: CalendarDays, label: 'График смен' },
   { to: '/shifts', icon: ClipboardList, label: 'Данные смен' },
+  { section: 'Приложения' },
+  { to: '/daily-codes', icon: KeyRound, label: 'Коды доступа' },
+  { to: '/checklists', icon: CheckSquare, label: 'Чек-листы' },
+  { to: '/chat', icon: MessageSquare, label: 'Чат' },
   { section: '' },
   { to: '/settings', icon: Settings, label: 'Настройки' },
 ];
