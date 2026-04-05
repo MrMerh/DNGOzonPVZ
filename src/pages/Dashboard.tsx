@@ -28,12 +28,18 @@ export default function Dashboard() {
     [entries],
   );
 
-  const grossIncome = monthIncome.reduce((s, e) => s + e.amount, 0);
-  const taxAmount = monthIncome.reduce((s, e) => s + (e.noTax ? 0 : calcTax(e.amount, taxRate)), 0);
+  // All-time totals for summary cards
+  const grossIncome = entries.reduce((s, e) => s + e.amount, 0);
+  const taxAmount = entries.reduce((s, e) => s + (e.noTax ? 0 : calcTax(e.amount, taxRate)), 0);
   const netIncome = grossIncome - taxAmount;
-  const totalExpenses = monthExpenses.reduce((s, e) => s + e.amount, 0);
+  const totalExpenses = expenses.reduce((s, e) => s + e.amount, 0);
   const profit = netIncome - totalExpenses;
-  const breakevenProgress = breakevenTarget > 0 ? netIncome / breakevenTarget : 0;
+
+  // This month for breakeven progress
+  const monthGross = monthIncome.reduce((s, e) => s + e.amount, 0);
+  const monthTax = monthIncome.reduce((s, e) => s + (e.noTax ? 0 : calcTax(e.amount, taxRate)), 0);
+  const monthNet = monthGross - monthTax;
+  const breakevenProgress = breakevenTarget > 0 ? monthNet / breakevenTarget : 0;
 
   const recent: RecentTransaction[] = useMemo(() => {
     const inc: RecentTransaction[] = entries.slice(0, 5).map((e) => ({
@@ -49,7 +55,7 @@ export default function Dashboard() {
 
   return (
     <div className="page">
-      <h1 className="page-title">Дашборд <span className="page-title-sub">{currentMonthLabel}</span></h1>
+      <h1 className="page-title">Дашборд <span className="page-title-sub">за всё время</span></h1>
 
       <div className="cards-grid">
         <SummaryCard label="Выручка (брутто)" value={formatCurrency(grossIncome)} sub={`Нетто после налога: ${formatCurrency(netIncome)}`} accent="blue" />
@@ -67,7 +73,7 @@ export default function Dashboard() {
         <h2 className="card-title">Точка безубыточности</h2>
         <ProgressBar
           value={breakevenProgress}
-          label={`Нетто доход / цель ${formatCurrency(breakevenTarget)}`}
+          label={`${currentMonthLabel} — нетто ${formatCurrency(monthNet)} / цель ${formatCurrency(breakevenTarget)}`}
         />
       </div>
 
