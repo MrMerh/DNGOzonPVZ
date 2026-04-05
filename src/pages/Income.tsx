@@ -121,20 +121,29 @@ export default function Income() {
                     </td>
                     <td className="amount-cell green">{formatCurrency(entry.amount)}</td>
                     <td>
-                      {entry.noTax ? (
-                        <span className="tag no-tax-tag">— налог не начисляется</span>
-                      ) : (
+                      <div className="tax-cell-row">
+                        {entry.noTax ? (
+                          <span className="tag no-tax-tag">Без налога</span>
+                        ) : (
+                          <button
+                            className={`tax-toggle${entry.showNet ? ' show-net' : ''}`}
+                            onClick={() => updateEntry(entry.id, { showNet: !entry.showNet })}
+                            title="Нажмите чтобы переключить вид"
+                          >
+                            {entry.showNet
+                              ? <><span className="tag red">−{formatCurrency(calcTax(entry.amount, taxRate))}</span> → <span className="tag accent">{formatCurrency(calcNet(entry.amount, taxRate))}</span></>
+                              : <span className="tag muted">Показать нетто</span>
+                            }
+                          </button>
+                        )}
                         <button
-                          className={`tax-toggle${entry.showNet ? ' show-net' : ''}`}
-                          onClick={() => updateEntry(entry.id, { showNet: !entry.showNet })}
-                          title="Нажмите чтобы переключить вид"
+                          className={`no-tax-toggle-btn${entry.noTax ? ' active' : ''}`}
+                          onClick={() => updateEntry(entry.id, { noTax: !entry.noTax, showNet: false })}
+                          title={entry.noTax ? 'Включить налог' : 'Отключить налог'}
                         >
-                          {entry.showNet
-                            ? <><span className="tag red">−{formatCurrency(calcTax(entry.amount, taxRate))}</span> → <span className="tag accent">{formatCurrency(calcNet(entry.amount, taxRate))}</span></>
-                            : <span className="tag muted">Показать нетто</span>
-                          }
+                          {entry.noTax ? '+ налог' : 'без налога'}
                         </button>
-                      )}
+                      </div>
                     </td>
                     <td className="row-actions">
                       <button className="icon-btn" onClick={() => startEdit(entry)}><Pencil size={15} /></button>
