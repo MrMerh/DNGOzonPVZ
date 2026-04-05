@@ -29,8 +29,8 @@ export default function Dashboard() {
   );
 
   const grossIncome = monthIncome.reduce((s, e) => s + e.amount, 0);
-  const taxAmount = calcTax(grossIncome, taxRate);
-  const netIncome = calcNet(grossIncome, taxRate);
+  const taxAmount = monthIncome.reduce((s, e) => s + (e.noTax ? 0 : calcTax(e.amount, taxRate)), 0);
+  const netIncome = grossIncome - taxAmount;
   const totalExpenses = monthExpenses.reduce((s, e) => s + e.amount, 0);
   const profit = netIncome - totalExpenses;
   const breakevenProgress = breakevenTarget > 0 ? netIncome / breakevenTarget : 0;
@@ -52,7 +52,8 @@ export default function Dashboard() {
       <h1 className="page-title">Дашборд <span className="page-title-sub">{currentMonthLabel}</span></h1>
 
       <div className="cards-grid">
-        <SummaryCard label="Доходы (нетто)" value={formatCurrency(netIncome)} sub={`Налог: ${formatCurrency(taxAmount)}`} accent="green" />
+        <SummaryCard label="Выручка (брутто)" value={formatCurrency(grossIncome)} sub={`Нетто после налога: ${formatCurrency(netIncome)}`} accent="blue" />
+        <SummaryCard label="Налог" value={formatCurrency(taxAmount)} sub={`Ставка: ${Math.round(taxRate * 100)}%`} accent="red" />
         <SummaryCard label="Расходы" value={formatCurrency(totalExpenses)} accent="red" />
         <SummaryCard
           label="Прибыль / Убыток"
@@ -60,7 +61,6 @@ export default function Dashboard() {
           sub={profit >= 0 ? 'В плюсе' : 'В минусе'}
           accent={profit >= 0 ? 'green' : 'red'}
         />
-        <SummaryCard label="Доходы (брутто)" value={formatCurrency(grossIncome)} accent="blue" />
       </div>
 
       <div className="card" style={{ marginTop: 24 }}>
