@@ -19,10 +19,6 @@ export default function Dashboard() {
   const { settings } = useSettingsContext();
   const { taxRate, breakevenTarget } = settings;
 
-  const monthExpenses = useMemo(
-    () => expenses.filter((e) => toISOMonth(e.date) === THIS_MONTH),
-    [expenses],
-  );
   const monthIncome = useMemo(
     () => entries.filter((e) => toISOMonth(e.date) === THIS_MONTH),
     [entries],
