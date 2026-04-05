@@ -23,6 +23,7 @@ export interface IncomeEntry {
   amount: number;
   description: string;
   showNet: boolean;
+  noTax: boolean;   // если true — налог не начисляется
   createdAt: Date;
 }
 

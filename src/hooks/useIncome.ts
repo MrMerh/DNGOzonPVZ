@@ -17,12 +17,17 @@ export function useIncome() {
   useEffect(() => {
     const q = query(COL, orderBy('date', 'desc'));
     const unsub = onSnapshot(q, (snap) => {
-      setEntries(snap.docs.map((d) => ({
-        ...(d.data() as Omit<IncomeEntry, 'id' | 'date' | 'createdAt'>),
-        id: d.id,
-        date: toDate(d.data().date as Timestamp),
-        createdAt: toDate(d.data().createdAt as Timestamp),
-      })));
+      setEntries(snap.docs.map((d) => {
+        const data = d.data();
+        return {
+          ...(data as Omit<IncomeEntry, 'id' | 'date' | 'createdAt'>),
+          id: d.id,
+          date: toDate(data.date as Timestamp),
+          createdAt: toDate(data.createdAt as Timestamp),
+          showNet: data.showNet ?? false,
+          noTax: data.noTax ?? false,
+        };
+      }));
       setLoading(false);
     }, (err) => { setError(err); setLoading(false); });
     return unsub;
