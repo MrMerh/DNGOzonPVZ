@@ -7,7 +7,7 @@ import ProgressBar from '../components/ui/ProgressBar';
 import Badge from '../components/ui/Badge';
 import { formatCurrency } from '../utils/formatCurrency';
 import { formatDate, toISOMonth } from '../utils/dateHelpers';
-import { calcNet, calcTax } from '../utils/taxCalculations';
+import { calcTax } from '../utils/taxCalculations';
 import type { RecentTransaction } from '../types';
 import { format } from 'date-fns';
 
