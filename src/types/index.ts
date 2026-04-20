@@ -68,11 +68,18 @@ export interface PVZPoint {
 // ─── Employees ────────────────────────────────────────────────────────────────
 
 export type EmployeeRole = 'owner' | 'manager' | 'employee';
+export type EmploymentType = 'official' | 'gph' | 'self_employed';
 
 export const ROLE_LABELS: Record<EmployeeRole, string> = {
   owner: 'Владелец',
   manager: 'Менеджер',
   employee: 'Сотрудник',
+};
+
+export const EMPLOYMENT_LABELS: Record<EmploymentType, string> = {
+  official: 'ТК РФ',
+  gph: 'ГПХ',
+  self_employed: 'Самозанятость',
 };
 
 export const ROLE_COLORS: Record<EmployeeRole, string> = {
@@ -87,6 +94,7 @@ export interface Employee {
   tgUsername: string;
   primaryPvzId: string;
   role: EmployeeRole;
+  employmentType: EmploymentType;
   hourlyRate: number;   // ₽/час
   accessCode: string;
   codeUsed: boolean;

@@ -9,6 +9,7 @@ import Settings from './pages/Settings';
 import Employees from './pages/Employees';
 import Schedule from './pages/Schedule';
 import Shifts from './pages/Shifts';
+import Salaries from './pages/Salaries';
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
             <Route path="/employees" element={<Employees />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/shifts" element={<Shifts />} />
+            <Route path="/salaries" element={<Salaries />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
         </Routes>

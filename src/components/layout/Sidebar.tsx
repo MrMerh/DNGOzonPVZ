@@ -2,7 +2,7 @@ import { NavLink } from 'react-router-dom';
 import {
   LayoutDashboard, TrendingUp, TrendingDown,
   BarChart2, Settings, Package,
-  Users, CalendarDays, ClipboardList,
+  Users, CalendarDays, ClipboardList, Wallet,
 } from 'lucide-react';
 
 const NAV = [
@@ -15,6 +15,7 @@ const NAV = [
   { to: '/employees', icon: Users, label: 'Сотрудники' },
   { to: '/schedule', icon: CalendarDays, label: 'График смен' },
   { to: '/shifts', icon: ClipboardList, label: 'Данные смен' },
+  { to: '/salaries', icon: Wallet, label: 'Зарплаты' },
   { section: '' },
   { to: '/settings', icon: Settings, label: 'Настройки' },
 ];
