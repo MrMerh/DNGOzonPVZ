@@ -68,11 +68,18 @@ export interface PVZPoint {
 // ─── Employees ────────────────────────────────────────────────────────────────
 
 export type EmployeeRole = 'owner' | 'manager' | 'employee';
+export type EmploymentType = 'official' | 'gph' | 'self_employed';
 
 export const ROLE_LABELS: Record<EmployeeRole, string> = {
   owner: 'Владелец',
   manager: 'Менеджер',
   employee: 'Сотрудник',
+};
+
+export const EMPLOYMENT_LABELS: Record<EmploymentType, string> = {
+  official: 'ТК РФ',
+  gph: 'ГПХ',
+  self_employed: 'Самозанятость',
 };
 
 export const ROLE_COLORS: Record<EmployeeRole, string> = {
@@ -87,6 +94,7 @@ export interface Employee {
   tgUsername: string;
   primaryPvzId: string;
   role: EmployeeRole;
+  employmentType: EmploymentType;
   hourlyRate: number;   // ₽/час
   accessCode: string;
   codeUsed: boolean;
@@ -148,110 +156,4 @@ export interface Announcement {
   text: string;
   isActive: boolean;
   createdAt: Date;
-}
-
-// ─── Daily Codes (одноразовые коды для мобильного приложения) ─────────────────
-
-export type DailyCodeSource = 'telegram' | 'admin';
-
-export interface DailyCode {
-  id: string;
-  code: string;            // 6-значный код
-  employeeId: string;
-  employeeName: string;    // денормализация для удобства
-  createdAt: Date;
-  usedAt: Date | null;     // null = ещё не использован
-  expiresAt: Date;         // конец дня (23:59:59)
-  active: boolean;         // false после 24:00 или после использования
-  source: DailyCodeSource; // откуда сгенерирован код
-}
-
-// ─── Sessions (активные сессии моб./ПК приложений) ───────────────────────────
-
-export type SessionType = 'mobile' | 'desktop';
-
-export interface Session {
-  id: string;
-  employeeId: string;
-  employeeName: string;
-  pvzId: string;
-  type: SessionType;
-  startedAt: Date;
-  expiresAt: Date;         // 24:00 текущего дня
-  active: boolean;
-  codeId: string;          // ссылка на DailyCode (для mobile)
-}
-
-// ─── Checklists (шаблоны чек-листов) ─────────────────────────────────────────
-
-export interface ChecklistItem {
-  id: string;
-  text: string;
-  order: number;
-}
-
-export interface Checklist {
-  id: string;
-  title: string;
-  description: string;
-  items: ChecklistItem[];
-  pvzIds: string[];        // для каких ТТ (пустой = все)
-  isActive: boolean;
-  createdAt: Date;
-}
-
-// ─── Checklist Results (заполненные чек-листы) ───────────────────────────────
-
-export interface ChecklistResult {
-  id: string;
-  checklistId: string;
-  checklistTitle: string;
-  employeeId: string;
-  employeeName: string;
-  pvzId: string;
-  date: Date;
-  completedItems: string[];  // id'шники отмеченных пунктов
-  totalItems: number;
-  completedAt: Date | null;  // null = не завершён
-  createdAt: Date;
-}
-
-// ─── Chat (чат между админом и сотрудником на смене) ─────────────────────────
-
-export type ChatMessageSender = 'admin' | 'employee';
-
-export interface ChatMessage {
-  id: string;
-  chatId: string;          // sessionId или `admin_${employeeId}`
-  senderId: string;        // 'admin' или employeeId
-  senderName: string;
-  senderType: ChatMessageSender;
-  text: string;
-  readAt: Date | null;
-  createdAt: Date;
-}
-
-export interface Chat {
-  id: string;              // = sessionId
-  employeeId: string;
-  employeeName: string;
-  pvzId: string;
-  sessionType: SessionType;
-  lastMessage: string;
-  lastMessageAt: Date | null;
-  unreadAdmin: number;     // непрочитанные для админа
-  unreadEmployee: number;  // непрочитанные для сотрудника
-  active: boolean;
-  createdAt: Date;
-}
-
-// ─── Telegram Bot ────────────────────────────────────────────────────────────
-
-export interface TelegramLink {
-  id: string;
-  employeeId: string;
-  tgChatId: number;        // Telegram chat ID
-  tgUsername: string;
-  linkedAt: Date;
-  active: boolean;
 }
