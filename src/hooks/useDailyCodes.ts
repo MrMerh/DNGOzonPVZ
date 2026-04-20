@@ -31,6 +31,7 @@ export function useDailyCodes() {
           usedAt: data.usedAt ? toDate(data.usedAt as Timestamp) : null,
           expiresAt: toDate(data.expiresAt as Timestamp),
           active: data.active ?? false,
+          source: data.source ?? 'admin',
         };
       }));
       setLoading(false);

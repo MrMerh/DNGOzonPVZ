@@ -152,6 +152,8 @@ export interface Announcement {
 
 // ─── Daily Codes (одноразовые коды для мобильного приложения) ─────────────────
 
+export type DailyCodeSource = 'telegram' | 'admin';
+
 export interface DailyCode {
   id: string;
   code: string;            // 6-значный код
@@ -161,6 +163,7 @@ export interface DailyCode {
   usedAt: Date | null;     // null = ещё не использован
   expiresAt: Date;         // конец дня (23:59:59)
   active: boolean;         // false после 24:00 или после использования
+  source: DailyCodeSource; // откуда сгенерирован код
 }
 
 // ─── Sessions (активные сессии моб./ПК приложений) ───────────────────────────

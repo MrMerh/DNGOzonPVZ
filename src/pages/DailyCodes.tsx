@@ -1,34 +1,17 @@
 import { useState } from 'react';
-import { KeyRound, Copy, Check, XCircle } from 'lucide-react';
+import { KeyRound, Copy, Check, XCircle, Bot } from 'lucide-react';
 import { useDailyCodes } from '../hooks/useDailyCodes';
-import { useEmployees } from '../hooks/useEmployees';
 import { formatDate } from '../utils/dateHelpers';
 
 export default function DailyCodes() {
-  const { todayCodes, codes, loading, generateCode, deactivateCode } = useDailyCodes();
-  const { activeEmployees } = useEmployees();
-  const [selectedEmpId, setSelectedEmpId] = useState('');
+  const { todayCodes, codes, loading, deactivateCode } = useDailyCodes();
   const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [generating, setGenerating] = useState(false);
-
-  async function handleGenerate() {
-    if (!selectedEmpId) return;
-    const emp = activeEmployees.find((e) => e.id === selectedEmpId);
-    if (!emp) return;
-    setGenerating(true);
-    await generateCode(emp.id, emp.name);
-    setSelectedEmpId('');
-    setGenerating(false);
-  }
 
   function copyCode(code: string, id: string) {
     navigator.clipboard.writeText(code);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 1500);
   }
-
-  // Сотрудники, для которых уже есть активный код сегодня
-  const empWithActiveCode = new Set(todayCodes.filter((c) => c.active).map((c) => c.employeeId));
 
   return (
     <div className="page">
@@ -39,31 +22,16 @@ export default function DailyCodes() {
         </h1>
       </div>
 
-      {/* Генерация кода */}
-      <div className="card" style={{ marginBottom: 20 }}>
-        <div className="card-title">Выдать код на сегодня</div>
-        <div className="scan-form">
-          <select
-            className="input"
-            value={selectedEmpId}
-            onChange={(e) => setSelectedEmpId(e.target.value)}
-            style={{ flex: 1, maxWidth: 300 }}
-          >
-            <option value="">— Выберите сотрудника —</option>
-            {activeEmployees.map((emp) => (
-              <option key={emp.id} value={emp.id} disabled={empWithActiveCode.has(emp.id)}>
-                {emp.name} {empWithActiveCode.has(emp.id) ? '(код выдан)' : ''}
-              </option>
-            ))}
-          </select>
-          <button
-            className="btn btn-primary"
-            onClick={handleGenerate}
-            disabled={!selectedEmpId || generating}
-          >
-            <KeyRound size={15} />
-            {generating ? 'Генерация...' : 'Сгенерировать'}
-          </button>
+      {/* Информация о том, что коды генерируются через бота */}
+      <div className="card" style={{ marginBottom: 20, borderColor: 'var(--accent)', borderWidth: 1, borderStyle: 'solid' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <Bot size={20} style={{ color: 'var(--accent)', flexShrink: 0 }} />
+          <div>
+            <div style={{ fontWeight: 600, marginBottom: 4 }}>Коды генерируются через Telegram-бот</div>
+            <div style={{ fontSize: 13, color: 'var(--text2)' }}>
+              Сотрудник отправляет команду <code>/code</code> в TG-бот и получает одноразовый код для входа в мобильное приложение. Здесь отображаются все выданные коды.
+            </div>
+          </div>
         </div>
       </div>
 
@@ -81,6 +49,7 @@ export default function DailyCodes() {
                 <tr>
                   <th>Сотрудник</th>
                   <th>Код</th>
+                  <th>Источник</th>
                   <th>Статус</th>
                   <th>Создан</th>
                   <th style={{ width: 80 }}></th>
@@ -94,6 +63,11 @@ export default function DailyCodes() {
                       <code className={`access-code${!dc.active ? ' used' : ''}`} style={{ fontSize: 22 }}>
                         {dc.code}
                       </code>
+                    </td>
+                    <td>
+                      <span className={`tag ${dc.source === 'telegram' ? 'accent' : 'muted'}`}>
+                        {dc.source === 'telegram' ? 'TG-бот' : 'Админ'}
+                      </span>
                     </td>
                     <td>
                       {dc.usedAt ? (
