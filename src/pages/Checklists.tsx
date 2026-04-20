@@ -5,6 +5,7 @@ import {
 } from 'lucide-react';
 import { useChecklists } from '../hooks/useChecklists';
 import { usePVZPoints } from '../hooks/usePVZPoints';
+import type { Checklist } from '../types';
 
 import Modal from '../components/ui/Modal';
 
@@ -73,7 +74,7 @@ export default function Checklists() {
     setForm(EMPTY_FORM);
   }
 
-  function startEdit(cl: typeof checklists[0]) {
+  function startEdit(cl: Checklist) {
     setEditId(cl.id);
     setEditForm({
       title: cl.title,
@@ -89,7 +90,7 @@ export default function Checklists() {
     await updateChecklist(editId, {
       title: editForm.title.trim(),
       description: editForm.description.trim(),
-      items: validItems.map((item, i) => ({
+      items: validItems.map((item, i: number) => ({
         id: Math.random().toString(36).slice(2, 10),
         text: item.text,
         order: i,
@@ -126,7 +127,7 @@ export default function Checklists() {
 
         <label className="field-label">Пункты чек-листа *</label>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-          {f.items.map((item, idx) => (
+          {f.items.map((item, idx: number) => (
             <div key={idx} style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
               <GripVertical size={14} style={{ color: 'var(--text2)', flexShrink: 0 }} />
               <input
@@ -264,9 +265,9 @@ export default function Checklists() {
 
                 {expandedId === cl.id && (
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 4, marginTop: 4 }}>
-                    {cl.items
+                    {[...cl.items]
                       .sort((a, b) => a.order - b.order)
-                      .map((item, idx) => (
+                      .map((item, idx: number) => (
                         <div
                           key={item.id}
                           style={{

@@ -30,7 +30,6 @@ export default function Salaries() {
       .filter(e => e.isActive || monthShifts.some(s => s.employeeId === e.id))
       .map(emp => {
         const empShifts = monthShifts.filter(s => s.employeeId === emp.id);
-        const empSlots = slots.filter(s => s.employeeId === emp.id);
 
         const totalHours = empShifts.reduce((sum, s) => sum + (s.hours || 0), 0);
         const totalBonus = empShifts.reduce((sum, s) => sum + (s.bonus || 0), 0);
@@ -44,7 +43,6 @@ export default function Salaries() {
         return {
           employee: emp,
           shiftsCount: empShifts.length,
-          slotsCount: empSlots.length,
           totalHours,
           totalBonus,
           totalFine,
@@ -55,9 +53,9 @@ export default function Salaries() {
           employmentLabel: EMPLOYMENT_LABELS[emp.employmentType || 'official']
         };
       })
-      .filter(d => d.shiftsCount > 0 || d.slotsCount > 0)
+      .filter(d => d.shiftsCount > 0)
       .sort((a, b) => b.net - a.net);
-  }, [employees, monthShifts, slots]);
+  }, [employees, monthShifts]);
 
   const totals = useMemo(() => {
     return salaryData.reduce((acc, d) => ({
