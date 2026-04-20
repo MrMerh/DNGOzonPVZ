@@ -157,3 +157,64 @@ export interface Announcement {
   isActive: boolean;
   createdAt: Date;
 }
+
+// ─── Chat ─────────────────────────────────────────────────────────────────────
+
+export type ChatMessageSender = 'admin' | 'employee';
+
+export interface ChatMessage {
+  id: string;
+  chatId: string;
+  senderId: string;
+  senderName: string;
+  senderType: ChatMessageSender;
+  text: string;
+  readAt: Date | null;
+  createdAt: Date;
+}
+
+export interface Chat {
+  id: string;
+  employeeId: string;
+  employeeName: string;
+  pvzId: string;
+  sessionType: 'mobile' | 'web';
+  lastMessage: string;
+  lastMessageAt: Date | null;
+  unreadAdmin: number;
+  unreadEmployee: number;
+  active: boolean;
+  createdAt: Date;
+}
+
+// ─── Checklists ───────────────────────────────────────────────────────────────
+
+export interface ChecklistItem {
+  id: string;
+  text: string;
+  order: number;
+}
+
+export interface Checklist {
+  id: string;
+  title: string;
+  description: string;
+  items: ChecklistItem[];
+  pvzIds: string[];
+  isActive: boolean;
+  createdAt: Date;
+}
+
+// ─── Daily Codes ──────────────────────────────────────────────────────────────
+
+export interface DailyCode {
+  id: string;
+  code: string;
+  employeeId: string;
+  employeeName: string;
+  createdAt: Date;
+  usedAt: Date | null;
+  expiresAt: Date;
+  active: boolean;
+  source: 'admin' | 'system';
+}

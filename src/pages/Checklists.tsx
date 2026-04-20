@@ -42,7 +42,7 @@ export default function Checklists() {
 
   function removeItem(f: FormState, setF: (v: FormState) => void, idx: number) {
     if (f.items.length <= 1) return;
-    setF({ ...f, items: f.items.filter((_, i) => i !== idx) });
+    setF({ ...f, items: f.items.filter((_, i: number) => i !== idx) });
   }
 
   function updateItem(f: FormState, setF: (v: FormState) => void, idx: number, text: string) {
@@ -55,7 +55,7 @@ export default function Checklists() {
     const has = f.pvzIds.includes(pvzId);
     setF({
       ...f,
-      pvzIds: has ? f.pvzIds.filter((id) => id !== pvzId) : [...f.pvzIds, pvzId],
+      pvzIds: has ? f.pvzIds.filter((id: string) => id !== pvzId) : [...f.pvzIds, pvzId],
     });
   }
 

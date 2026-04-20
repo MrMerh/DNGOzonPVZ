@@ -2,13 +2,12 @@ import { useState, useMemo } from 'react';
 import { useEmployees } from '../hooks/useEmployees';
 import { useShifts } from '../hooks/useShifts';
 import { useSchedule } from '../hooks/useSchedule';
-import { usePVZPoints } from '../hooks/usePVZPoints';
-import { format, startOfMonth, endOfMonth, isSameMonth, eachMonthOfInterval, subMonths } from 'date-fns';
+import { format, isSameMonth } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { calculateSalaryTaxes } from '../utils/taxCalculations';
 import { EMPLOYMENT_LABELS } from '../types';
 import { formatCurrency } from '../utils/formatCurrency';
-import { ChevronLeft, ChevronRight, Calculator, User, Clock, Wallet, Percent, Banknote } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Calculator } from 'lucide-react';
 import SummaryCard from '../components/ui/SummaryCard';
 
 export default function Salaries() {
@@ -17,7 +16,6 @@ export default function Salaries() {
   const { employees, loading: empsLoading } = useEmployees();
   const { shifts, loading: shiftsLoading } = useShifts();
   const { slots, loading: scheduleLoading } = useSchedule(selectedMonth);
-  const { points } = usePVZPoints();
 
   const loading = empsLoading || shiftsLoading || scheduleLoading;
 
@@ -100,26 +98,23 @@ export default function Salaries() {
         <SummaryCard 
           label="Всего к выплате (Net)" 
           value={formatCurrency(totals.net)} 
-          icon={<Wallet size={24} />}
-          trend={{ value: `${totals.shifts} смен`, isPositive: true }}
+          accent="green"
+          sub={`${totals.shifts} смен`}
         />
         <SummaryCard 
           label="Общий налог" 
           value={formatCurrency(totals.tax)} 
-          icon={<Percent size={24} />}
-          color="var(--orange)"
+          accent="default"
         />
         <SummaryCard 
           label="ФОТ (Gross)" 
           value={formatCurrency(totals.gross)} 
-          icon={<Banknote size={24} />}
-          color="var(--blue)"
+          accent="blue"
         />
         <SummaryCard 
           label="Отработано часов" 
           value={`${Math.round(totals.hours)} ч.`} 
-          icon={<Clock size={24} />}
-          color="var(--purple)"
+          accent="default"
         />
       </div>
 
