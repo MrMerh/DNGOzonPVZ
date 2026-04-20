@@ -9,9 +9,7 @@ import Settings from './pages/Settings';
 import Employees from './pages/Employees';
 import Schedule from './pages/Schedule';
 import Shifts from './pages/Shifts';
-import DailyCodes from './pages/DailyCodes';
-import Checklists from './pages/Checklists';
-import ChatAdmin from './pages/ChatAdmin';
+import Salaries from './pages/Salaries';
 
 export default function App() {
   return (
@@ -27,9 +25,7 @@ export default function App() {
             <Route path="/employees" element={<Employees />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/shifts" element={<Shifts />} />
-            <Route path="/daily-codes" element={<DailyCodes />} />
-            <Route path="/checklists" element={<Checklists />} />
-            <Route path="/chat" element={<ChatAdmin />} />
+            <Route path="/salaries" element={<Salaries />} />
             <Route path="/settings" element={<Settings />} />
           </Route>
         </Routes>

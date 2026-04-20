@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Plus, RefreshCw, Pencil, Trash2, Check, X, ToggleLeft, ToggleRight, ChevronDown, ChevronUp } from 'lucide-react';
 import { useEmployees } from '../hooks/useEmployees';
 import { usePVZPoints } from '../hooks/usePVZPoints';
-import type { Employee, EmployeeRole } from '../types';
-import { ROLE_LABELS, ROLE_COLORS } from '../types';
+import type { Employee, EmployeeRole, EmploymentType } from '../types';
+import { ROLE_LABELS, ROLE_COLORS, EMPLOYMENT_LABELS } from '../types';
 import Modal from '../components/ui/Modal';
 import Barcode from '../components/ui/Barcode';
 
@@ -12,15 +12,17 @@ interface FormState {
   tgUsername: string;
   primaryPvzId: string;
   role: EmployeeRole;
+  employmentType: EmploymentType;
   hourlyRate: string;
 }
 
 const EMPTY_FORM: FormState = {
   name: '', tgUsername: '', primaryPvzId: '',
-  role: 'employee', hourlyRate: '',
+  role: 'employee', employmentType: 'official', hourlyRate: '',
 };
 
 const ROLES: EmployeeRole[] = ['owner', 'manager', 'employee'];
+const EMPLOYMENT_TYPES: EmploymentType[] = ['official', 'gph', 'self_employed'];
 
 export default function Employees() {
   const { employees, loading, addEmployee, updateEmployee, regenCode, deleteEmployee } = useEmployees();
@@ -37,6 +39,7 @@ export default function Employees() {
       name: e.name, tgUsername: e.tgUsername,
       primaryPvzId: e.primaryPvzId,
       role: e.role ?? 'employee',
+      employmentType: e.employmentType ?? 'official',
       hourlyRate: String(e.hourlyRate ?? 0),
     };
   }
@@ -48,6 +51,7 @@ export default function Employees() {
       tgUsername: form.tgUsername,
       primaryPvzId: form.primaryPvzId,
       role: form.role,
+      employmentType: form.employmentType,
       hourlyRate: parseFloat(form.hourlyRate) || 0,
       isActive: true,
       pvzAccess: form.primaryPvzId ? [form.primaryPvzId] : [],
@@ -62,6 +66,7 @@ export default function Employees() {
       tgUsername: editForm.tgUsername,
       primaryPvzId: editForm.primaryPvzId,
       role: editForm.role,
+      employmentType: editForm.employmentType,
       hourlyRate: parseFloat(editForm.hourlyRate) || 0,
     });
     setEditId(null);
@@ -115,6 +120,10 @@ export default function Employees() {
                           onChange={(e) => setEditForm({ ...editForm, role: e.target.value as EmployeeRole })}>
                           {ROLES.map((r) => <option key={r} value={r}>{ROLE_LABELS[r]}</option>)}
                         </select>
+                        <select className="input-sm" value={editForm.employmentType}
+                          onChange={(e) => setEditForm({ ...editForm, employmentType: e.target.value as EmploymentType })}>
+                          {EMPLOYMENT_TYPES.map((t) => <option key={t} value={t}>{EMPLOYMENT_LABELS[t]}</option>)}
+                        </select>
                         <input className="input-sm" type="number" value={editForm.hourlyRate}
                           placeholder="₽/час"
                           onChange={(e) => setEditForm({ ...editForm, hourlyRate: e.target.value })} />
@@ -137,6 +146,9 @@ export default function Employees() {
                             }}
                           >
                             {ROLE_LABELS[emp.role ?? 'employee']}
+                          </span>
+                          <span className="badge badge-outline ml-2">
+                            {EMPLOYMENT_LABELS[emp.employmentType ?? 'official']}
                           </span>
                         </div>
                         <div className="emp-meta">
@@ -260,6 +272,12 @@ export default function Employees() {
             <input className="input" type="number" min="0" step="10" placeholder="250"
               value={form.hourlyRate}
               onChange={(e) => setForm({ ...form, hourlyRate: e.target.value })} />
+
+            <label className="field-label">Тип трудоустройства</label>
+            <select className="input" value={form.employmentType}
+              onChange={(e) => setForm({ ...form, employmentType: e.target.value as EmploymentType })}>
+              {EMPLOYMENT_TYPES.map((t) => <option key={t} value={t}>{EMPLOYMENT_LABELS[t]}</option>)}
+            </select>
 
             <label className="field-label">Основная ТТ</label>
             <select className="input" value={form.primaryPvzId}
